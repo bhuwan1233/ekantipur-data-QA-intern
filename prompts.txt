@@ -1,0 +1,57 @@
+1) I am doing the Audio Bee Data QA Intern test. I must use Python + Playwright (sync), and output must be:
+{
+  "entertainment_news": [5 items],
+  "cartoon_of_the_day": {title, image_url, author}
+}
+Please generate a clean scraper.py skeleton with:
+- BASE_URL constants
+- helper functions safe_text() and safe_attr()
+- scrape_entertainment(page) and scrape_cartoon(page)
+- main(headless=False)
+- json dump with ensure_ascii=False and indent=2
+Add meaningful comments that explain WHY we wait and WHY we handle missing elements. Avoid long essay comments.
+
+2) I will scrape the Entertainment section from https://ekantipur.com/entertainment.
+I want to extract the top 5 article cards using Playwright sync.
+Please write a function:
+def scrape_entertainment(page) -> list[dict]:
+Requirements:
+- page.goto(ENTERTAINMENT_URL, wait_until="domcontentloaded")
+- select top 5 cards with query_selector_all(... )[:5]
+- extract title from h2
+- extract author from .author (nullable)
+- extract image from .image img (src)
+- output fields: title, image_url, category="मनोरञ्जन", author
+Use safe_text and safe_attr and include short meaningful comments.
+
+3) I will scrape the Cartoon page from https://ekantipur.com/cartoon.
+Please write:
+def scrape_cartoon(page) -> dict | None:
+Requirements:
+- page.goto(CARTOON_URL, wait_until="domcontentloaded")
+- wait_for_selector("section.cartoon-wrapper figure.popup-image img", timeout=30000)
+- read thumbnail src and alt for title
+- if thumbnail contains "src=" query parameter, extract the direct image URL from it
+- read author from ".cartoon-author"
+- return {title, image_url, author}
+Use safe_text/safe_attr and add comments explaining WHY we wait and WHY we safely handle missing wrapper.
+
+4) Here is my current scraper.py (paste my code).
+Please improve ONLY the comments to be professional:
+- Explain why wait_for_selector is used
+- Explain why safe_text and safe_attr exist
+- Explain why author can be None
+- Explain why ensure_ascii=False is required for Nepali text
+Do not change logic, only improve comments.
+
+5) My images sometimes become None in scraping.
+Update ONLY the image extraction logic in entertainment and cartoon to try:
+src, data-src, data-original, srcset (first URL in srcset).
+Convert relative URLs to absolute using urljoin(BASE_URL, url).
+Return the smallest code changes possible.
+
+6) Add minimal debugging that I can enable during development:
+- print number of entertainment cards found
+- if zero cards, take screenshot "debug_entertainment.png"
+- optional page.pause() (commented out)
+Keep production output.json unchanged.
